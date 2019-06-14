@@ -1,4 +1,5 @@
 #include "Main.hpp"
+#include "Town.h"
 
 int main()
 {
@@ -6,7 +7,7 @@ int main()
 	settings.antialiasingLevel = 8;
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Travelling Salesman Problem", sf::Style::Close, settings);
 
-
+	Town t1(window.getSize().x / 2, window.getSize().y / 2, 0);
 
 	sf::Event event;
 
@@ -19,6 +20,7 @@ int main()
 		}
 
 		window.clear(sf::Color::White);
+		t1.draw(window);
 		window.display();
 	}
 

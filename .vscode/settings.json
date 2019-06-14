@@ -50,7 +50,9 @@
 	"files.associations": {
 		"*.json": "jsonc",
 		"*.stats": "cpp",
-		"*.rc": "cpp"
+		"*.rc": "cpp",
+		"ios": "cpp",
+		"random": "cpp"
 	},
 
 	"C_Cpp.autocomplete": "Default",
