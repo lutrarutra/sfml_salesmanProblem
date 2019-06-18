@@ -29,7 +29,6 @@ void Town::connect(Town *t)
 {
 	this->connectedTown = t;
 	float angle = atan2((this->y - t->y), (this->x - t->x)) * 180 / PI - 180;
-	std::cout << angle << std::endl;
 	this->road = new sf::RectangleShape(sf::Vector2f(distance(t), 4));
 	this->road->setPosition(sf::Vector2f(x, y));
 	this->road->setFillColor(sf::Color::Black);
