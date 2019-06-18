@@ -9,9 +9,13 @@ Town::Town(int x, int y, int index)
 	this->x = x;
 	this->y = y;
 	this->index = index;
-	this->circle = new sf::CircleShape(7);
-	circle->setFillColor(sf::Color::Red);
-	circle->setOrigin(5, 5);
+	this->circle = new sf::CircleShape(8);
+	if(index == 0)
+		circle->setFillColor(sf::Color(144, 204, 136));
+	else
+		circle->setFillColor(sf::Color(68, 68, 68));
+
+	circle->setOrigin(8, 8);
 	circle->setPosition(x, y);
 }
 
@@ -31,8 +35,8 @@ void Town::connect(Town *t)
 	float angle = atan2((this->y - t->y), (this->x - t->x)) * 180 / PI - 180;
 	this->road = new sf::RectangleShape(sf::Vector2f(distance(t), 4));
 	this->road->setPosition(sf::Vector2f(x, y));
-	this->road->setFillColor(sf::Color::Black);
-	this->road->setOrigin(0, 0);
+	this->road->setFillColor(sf::Color(186, 186, 186));
+	this->road->setOrigin(0, 2);
 	this->road->setRotation(angle);
 }
 
