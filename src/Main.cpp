@@ -20,7 +20,7 @@ void updateVec(std::vector<Town *> &vec, int *orderArr)
 	for (unsigned int i = 0; i < vec.size() - 1; ++i)
 	{
 		vec.at(orderArr[i])->disconnect();
-		vec.at(orderArr[i])->connect(vec.at(orderArr[i+1]));
+		vec.at(orderArr[i])->connect(vec.at(orderArr[i + 1]));
 	}
 }
 
@@ -31,7 +31,7 @@ void swap(int *arr, unsigned int i, unsigned int j)
 	arr[j] = temp;
 }
 
-//This shuffle function keeps first town always as same first town
+//This shuffle function keeps first town always at the first town
 void shuffle(int *arr, unsigned int arraySize)
 {
 	srand(time(NULL));
@@ -56,6 +56,9 @@ int main()
 	const int townCount = 8;
 	std::vector<Town *> towns;
 	int *order = new int[townCount];
+	int *bestOrder = new int[townCount];
+	int distance = INT_MAX;
+	int bestDistance = INT_MAX;
 
 	srand(time(NULL));
 
@@ -95,7 +98,12 @@ int main()
 			clock.restart();
 			shuffle(order, townCount);
 			updateVec(towns, order);
-			int d = floor(calcDistance(towns));
+			distance = floor(calcDistance(towns));
+			if (distance < bestDistance)
+			{
+				bestDistance = distance;
+				memcpy(bestOrder, order, townCount * sizeof(int));
+			}
 			text.setString(std::to_string(d));
 		}
 
@@ -113,6 +121,9 @@ int main()
 	{
 		delete towns.at(i);
 	}
+
+	delete[] bestOrder;
+	delete[] order;
 
 	return 0;
 }
