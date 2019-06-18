@@ -15,30 +15,30 @@ float calcDistance(std::vector<Town *> &vec)
 	return d;
 }
 
-void updateVec(std::vector<Town *> &vec)
+void updateVec(std::vector<Town *> &vec, int *orderArr)
 {
 	for (unsigned int i = 0; i < vec.size() - 1; ++i)
 	{
-		vec.at(i)->disconnect();
-		vec.at(i)->connect(vec.at(i + 1));
+		vec.at(orderArr[i])->disconnect();
+		vec.at(orderArr[i])->connect(vec.at(orderArr[i+1]));
 	}
 }
 
-void swap(std::vector<Town *> &vec, unsigned int i, unsigned int j)
+void swap(int *arr, unsigned int i, unsigned int j)
 {
-	Town *temp = vec.at(i);
-	vec[i] = vec.at(j);
-	vec[j] = temp;
+	int temp = arr[i];
+	arr[i] = arr[j];
+	arr[j] = temp;
 }
 
 //This shuffle function keeps first town always as same first town
-void shuffle(std::vector<Town *> &vec)
+void shuffle(int *arr, unsigned int arraySize)
 {
 	srand(time(NULL));
-	for (int i = vec.size() - 1; i > 1; --i)
+	for (int i = arraySize - 1; i > 1; --i)
 	{
 		int j = rand() % i + 1;
-		swap(vec, i, j);
+		swap(arr, i, j);
 	}
 }
 
@@ -53,16 +53,19 @@ int main()
 	settings.antialiasingLevel = 8;
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Travelling Salesman Problem", sf::Style::Close, settings);
 
-	int townCount = 8;
+	const int townCount = 8;
 	std::vector<Town *> towns;
+	int *order = new int[townCount];
+
 	srand(time(NULL));
 
 	for (int i = 0; i < townCount; ++i)
 	{
 		towns.push_back(new Town(randomNum(10, window.getSize().x - 10), randomNum(10, window.getSize().y - 10), i));
+		order[i] = i;
 	}
-	shuffle(towns);
-	updateVec(towns);
+	shuffle(order, townCount);
+	updateVec(towns, order);
 
 	sf::Clock clock;
 	sf::Font font;
@@ -75,6 +78,10 @@ int main()
 
 	sf::Text text;
 	text.setFont(font);
+	text.setCharacterSize(24);
+	text.setFillColor(sf::Color::Black);
+	int d = floor(calcDistance(towns));
+	text.setString(std::to_string(d));
 
 	while (window.isOpen())
 	{
@@ -86,11 +93,10 @@ int main()
 		if (clock.getElapsedTime().asSeconds() > 3)
 		{
 			clock.restart();
-			shuffle(towns);
-			updateVec(towns);
-			text.setString(std::to_string(floor(calcDistance(towns))));
-			text.setCharacterSize(24);
-			text.setFillColor(sf::Color::Black);
+			shuffle(order, townCount);
+			updateVec(towns, order);
+			int d = floor(calcDistance(towns));
+			text.setString(std::to_string(d));
 		}
 
 		window.clear(sf::Color::White);

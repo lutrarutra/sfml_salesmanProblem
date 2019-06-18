@@ -17,7 +17,7 @@ Town::Town(int x, int y, int index)
 
 void Town::disconnect()
 {
-	if(this->road != nullptr)
+	if (this->road != nullptr)
 	{
 		delete road;
 		road = nullptr;
@@ -32,14 +32,14 @@ void Town::connect(Town *t)
 	this->road = new sf::RectangleShape(sf::Vector2f(distance(t), 4));
 	this->road->setPosition(sf::Vector2f(x, y));
 	this->road->setFillColor(sf::Color::Black);
-	this->road->setOrigin(0,2);
+	this->road->setOrigin(0, 0);
 	this->road->setRotation(angle);
 }
 
 void Town::draw(sf::RenderWindow &window)
 {
 	window.draw(sf::CircleShape(*circle));
-	if(road != nullptr)
+	if (road != nullptr)
 		window.draw(sf::RectangleShape(*road));
 }
 
