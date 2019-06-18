@@ -1,19 +1,41 @@
 #include <vector>
 #include <stdlib.h>
+#include <string>
+
 #include "Main.hpp"
 #include "Town.h"
 
-void swap(std::vector<Town *> &vec, int i, int j)
+float calcDistance(std::vector<Town *> &vec)
+{
+	float d = 0;
+	for (unsigned int i = 0; i < vec.size() - 1; ++i)
+	{
+		d += vec.at(i)->distance(vec.at(i + 1));
+	}
+	return d;
+}
+
+void updateVec(std::vector<Town *> &vec)
+{
+	for (unsigned int i = 0; i < vec.size() - 1; ++i)
+	{
+		vec.at(i)->disconnect();
+		vec.at(i)->connect(vec.at(i + 1));
+	}
+}
+
+void swap(std::vector<Town *> &vec, unsigned int i, unsigned int j)
 {
 	Town *temp = vec.at(i);
 	vec[i] = vec.at(j);
 	vec[j] = temp;
 }
 
+//This shuffle function keeps first town always as same first town
 void shuffle(std::vector<Town *> &vec)
 {
 	srand(time(NULL));
-	for (int i = vec.size() - 1; i > 0; --i)
+	for (int i = vec.size() - 1; i > 1; --i)
 	{
 		int j = rand() % i + 1;
 		swap(vec, i, j);
@@ -40,15 +62,19 @@ int main()
 		towns.push_back(new Town(randomNum(10, window.getSize().x - 10), randomNum(10, window.getSize().y - 10), i));
 	}
 	shuffle(towns);
-
-	for (int i = 0; i < townCount - 1; ++i)
-	{
-		towns.at(i)->connect(towns.at(i + 1));
-	}
+	updateVec(towns);
 
 	sf::Clock clock;
-
+	sf::Font font;
 	sf::Event event;
+
+	if (!font.loadFromFile("Roboto-Regular.ttf"))
+	{
+		return 1;
+	}
+
+	sf::Text text;
+	text.setFont(font);
 
 	while (window.isOpen())
 	{
@@ -57,9 +83,14 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		if (clock.getElapsedTime().asSeconds() > 1)
+		if (clock.getElapsedTime().asSeconds() > 3)
 		{
 			clock.restart();
+			shuffle(towns);
+			updateVec(towns);
+			text.setString(std::to_string(floor(calcDistance(towns))));
+			text.setCharacterSize(24);
+			text.setFillColor(sf::Color::Black);
 		}
 
 		window.clear(sf::Color::White);
@@ -67,6 +98,8 @@ int main()
 		{
 			towns.at(i)->draw(window);
 		}
+		window.draw(text);
+
 		window.display();
 	}
 
