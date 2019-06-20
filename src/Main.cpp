@@ -4,6 +4,7 @@
 
 #include "Main.hpp"
 #include "Town.h"
+#include "Road.h"
 
 float calcDistance(std::vector<Town *> &vec)
 {
@@ -15,12 +16,12 @@ float calcDistance(std::vector<Town *> &vec)
 	return d;
 }
 
-void updateVec(std::vector<Town *> &vec, int *orderArr)
+void updateVec(std::vector<Road *> &roads, std::vector<Town *> &towns, int *orderArr)
 {
-	for (unsigned int i = 0; i < vec.size() - 1; ++i)
+	for (unsigned int i = 0; i < roads.size(); ++i)
 	{
-		vec.at(orderArr[i])->disconnect();
-		vec.at(orderArr[i])->connect(vec.at(orderArr[i + 1]));
+		delete roads.at(i);
+		roads[i] = new Road(towns.at(orderArr[i]), towns.at(orderArr[i+1]));
 	}
 }
 
@@ -55,6 +56,7 @@ int main()
 
 	const int townCount = 8;
 	std::vector<Town *> towns;
+	std::vector<Road *> roads;
 	int *order = new int[townCount];
 	int *bestOrder = new int[townCount];
 	int distance = INT_MAX;
@@ -65,10 +67,12 @@ int main()
 	for (int i = 0; i < townCount; ++i)
 	{
 		towns.push_back(new Town(randomNum(10, window.getSize().x - 10), randomNum(10, window.getSize().y - 10), i));
+		if (i > 0)
+			roads.push_back(new Road(towns.at(i - 1), towns.at(i)));
 		order[i] = i;
 	}
 	shuffle(order, townCount);
-	updateVec(towns, order);
+	updateVec(roads, towns, order);
 
 	sf::Clock clock;
 	sf::Font font;
@@ -97,7 +101,7 @@ int main()
 		{
 			clock.restart();
 			shuffle(order, townCount);
-			updateVec(towns, order);
+			updateVec(roads, towns, order);
 			distance = floor(calcDistance(towns));
 			if (distance < bestDistance)
 			{
@@ -111,6 +115,8 @@ int main()
 		for (int i = 0; i < townCount; ++i)
 		{
 			towns.at(i)->draw(window);
+			if (i > 0)
+				roads.at(i - 1)->draw(window);
 		}
 		window.draw(text);
 
@@ -120,6 +126,8 @@ int main()
 	for (int i = 0; i < townCount; ++i)
 	{
 		delete towns.at(i);
+		if (i > 0)
+			delete roads.at(i - 1);
 	}
 
 	delete[] bestOrder;

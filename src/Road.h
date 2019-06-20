@@ -1,3 +1,4 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 
 #include "Town.h"
@@ -5,7 +6,7 @@
 class Road
 {
 public:
-	Road(Town &from, Town &to);
+	Road(Town *from, Town *to);
 	~Road();
 	void draw(sf::RenderWindow &window);
 	float distance();
