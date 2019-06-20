@@ -17,6 +17,7 @@ Town::Town(int x, int y, int index)
 	circle->setPosition(x, y);
 }
 
+
 void Town::draw(sf::RenderWindow &window)
 {
 	window.draw(sf::CircleShape(*circle));
@@ -29,11 +30,11 @@ float Town::distance(Town *t)
 
 int Town::getX()
 {
-	return x;
+	return this->x;
 }
 int Town::getY()
 {
-	return y;
+	return this->y;
 }
 
 Town::~Town()
