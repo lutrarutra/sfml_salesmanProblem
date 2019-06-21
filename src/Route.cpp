@@ -2,28 +2,36 @@
 
 #include "Route.h"
 
-Route::Route(Map &map)
+Route::Route(Map &map, sf::Color color)
 {
 	this->map = &map;
 	this->townCount = map.getTownCount();
 	this->order = new int[townCount];
+	this->color = color;
 	for (unsigned int i = 0; i < townCount; ++i)
 	{
 		order[i] = i;
 	}
-	this->roads = new std::vector<Road *>();
+	roads.reserve(townCount - 1);
 	for (unsigned int i = 0; i < townCount - 1; ++i)
 	{
-		roads->push_back(new Road(map.getTowns()->at(order[i]), map.getTowns()->at(order[i + 1])));
+		roads.push_back(new Road(map.getTowns().at(order[i]), map.getTowns().at(order[i + 1]), color));
 	}
-	std::cout << "Hello" << std::endl;
+}
+
+void Route::copyOrder(Route *dest)
+{
+	for (unsigned int i = 0; i < townCount; ++i)
+	{
+		dest->order[i] = this->order[i];
+	}
 }
 
 void Route::drawRoads(sf::RenderWindow &window)
 {
 	for (unsigned int i = 0; i < townCount - 1; ++i)
 	{
-		roads->at(i)->draw(window);
+		roads.at(i)->draw(window);
 	}
 }
 
@@ -31,8 +39,8 @@ void Route::updateRoads()
 {
 	for (unsigned int i = 0; i < townCount - 1; ++i)
 	{
-		delete roads->at(i);
-		roads->at(i) = new Road(map->getTowns()->at(order[i]), map->getTowns()->at(order[i + 1]));
+		delete roads.at(i);
+		roads.at(i) = new Road(map->getTowns().at(order[i]), map->getTowns().at(order[i + 1]), this->color);
 	}
 }
 
@@ -59,11 +67,15 @@ float Route::calcDistance()
 	float d = 0;
 	for (unsigned int i = 0; i < townCount - 1; ++i)
 	{
-		d += map->getTowns()->at(order[i])->distance(map->getTowns()->at(order[i + 1]));
+		d += map->getTowns().at(order[i])->distance(map->getTowns().at(order[i + 1]));
 	}
 	return d;
 }
 
 Route::~Route()
 {
+	for (unsigned int i = 0; i < townCount - 1; ++i)
+	{
+		delete roads.at(i);
+	}
 }

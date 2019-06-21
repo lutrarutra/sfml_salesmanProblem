@@ -4,23 +4,23 @@ Map::Map(unsigned int townCount, sf::RenderWindow &window)
 {
 	srand(time(NULL));
 	this->townCount = townCount;
-	towns = new std::vector<Town*>();
+	towns.reserve(townCount);
 	for (unsigned int i = 0; i < townCount; ++i)
 	{
-		towns->push_back(new Town(randomNum(10, window.getSize().x - 10), randomNum(10, window.getSize().y - 10), i));
+		towns.push_back(new Town(randomNum(10, window.getSize().x - 10), randomNum(10, window.getSize().y - 10), i));
 	}
 }
 void Map::drawMap(sf::RenderWindow &window)
 {
 	for(unsigned int i = 0; i < townCount; ++i)
 	{
-		towns->at(i)->draw(window);
+		towns.at(i)->draw(window);
 	}
 }
 
-std::vector<Town *> *Map::getTowns()
+std::vector<Town *> Map::getTowns()
 {
-	return this->towns;
+	return towns;
 }
 
 int Map::getTownCount()
@@ -37,7 +37,7 @@ Map::~Map()
 {
 	for (int i = 0; i < townCount; ++i)
 	{
-		delete towns->at(i);
+		delete towns.at(i);
 	}
-	delete towns;
+	//delete towns;
 }

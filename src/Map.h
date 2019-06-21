@@ -14,11 +14,11 @@ public:
 	float calculateDistance();
 	void drawMap(sf::RenderWindow &window);
 	int getTownCount();
-	std::vector<Town *> *getTowns();
+	std::vector<Town *> getTowns();
 
 	~Map();
 private:
 	unsigned int townCount;
 	int randomNum(int min, int max);
-	std::vector<Town *> *towns;
+	std::vector<Town *> towns;
 };

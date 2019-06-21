@@ -14,9 +14,9 @@ int main()
 	const int townCount = 8;
 
 	Map map(townCount, window);
-	Route route(map);
+	Route route(map, sf::Color(165, 165, 165));
+	Route bestRoute(map, sf::Color(152, 209, 144));
 
-	int distance = INT_MAX;
 	int bestDistance = INT_MAX;
 
 	srand(time(NULL));
@@ -34,7 +34,7 @@ int main()
 	text.setFont(font);
 	text.setCharacterSize(24);
 	text.setFillColor(sf::Color::Black);
-	distance = floor(route.calcDistance());
+	int distance = floor(route.calcDistance());
 	text.setString(std::to_string(distance));
 
 	while (window.isOpen())
@@ -44,7 +44,7 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		if (clock.getElapsedTime().asSeconds() > 3)
+		if (clock.getElapsedTime().asSeconds() > 1)
 		{
 			clock.restart();
 			route.shuffle();
@@ -53,12 +53,15 @@ int main()
 			if (distance < bestDistance)
 			{
 				bestDistance = distance;
+				route.copyOrder(&bestRoute);
+				bestRoute.updateRoads();
 			}
-			text.setString(std::to_string(distance));
+			text.setString("Distance: " + std::to_string(distance) + " Best distance: " + std::to_string(bestDistance));
 		}
 
 		window.clear(sf::Color::White);
 		route.drawRoads(window);
+		bestRoute.drawRoads(window);
 		map.drawMap(window);
 		window.draw(text);
 
