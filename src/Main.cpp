@@ -1,4 +1,5 @@
 #include <vector>
+#include <thread>
 #include <string>
 
 #include "Main.hpp"
@@ -15,7 +16,7 @@ int main()
 
 	Map map(townCount, window);
 	Route route(map, sf::Color(165, 165, 165));
-	Route bestRoute(map, sf::Color(152, 209, 144));
+	Route bestRoute(map, sf::Color(152, 209, 144, 150));
 
 	int bestDistance = INT_MAX;
 
@@ -37,6 +38,8 @@ int main()
 	int distance = floor(route.calcDistance());
 	text.setString(std::to_string(distance));
 
+	bool b = true;
+
 	while (window.isOpen())
 	{
 		while (window.pollEvent(event))
@@ -44,10 +47,10 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		if (clock.getElapsedTime().asSeconds() > 1)
+		if (clock.getElapsedTime().asSeconds() > 0.5f)
 		{
 			clock.restart();
-			route.shuffle();
+			b = !route.nextLexicOrder();
 			route.updateRoads();
 			distance = floor(route.calcDistance());
 			if (distance < bestDistance)
@@ -60,14 +63,15 @@ int main()
 		}
 
 		window.clear(sf::Color::White);
-		route.drawRoads(window);
-		bestRoute.drawRoads(window);
+		if(b)
+			route.drawRoads(window);
+		else
+			bestRoute.drawRoads(window);
 		map.drawMap(window);
 		window.draw(text);
 
 		window.display();
 	}
-
 
 	return 0;
 }

@@ -15,13 +15,15 @@ public:
 	void shuffle();
 	void updateRoads();
 	void setColor(sf::Color &color);
-	~Route();
 	float calcDistance();
+	bool nextLexicOrder();
+	~Route();
 
 private:
-	sf::Color color;
-	unsigned int townCount;
-	std::vector<Road *> roads;
+	void reverse(int from);
+	int townCount;
 	int *order;
+	sf::Color color;
+	std::vector<Road *> roads;
 	Map *map;
 };
