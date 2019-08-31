@@ -1,3 +1,4 @@
+#include <math.h>
 #include "Road.h"
 
 Road::Road(Town *from, Town *to, sf::Color color)

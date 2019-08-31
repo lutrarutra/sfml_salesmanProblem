@@ -1,8 +1,8 @@
 #include <vector>
 #include <thread>
 #include <string>
+#include <math.h>
 
-#include "Main.hpp"
 #include "Map.h"
 #include "Route.h"
 
@@ -12,7 +12,7 @@ int main()
 	settings.antialiasingLevel = 8;
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Travelling Salesman Problem", sf::Style::Close, settings);
 
-	const int townCount = 5;
+	const int townCount = 6;
 	Map map(townCount, window);
 	Route route(map, sf::Color(165, 165, 165));
 	Route bestRoute(map, sf::Color(152, 209, 144, 150));
@@ -25,7 +25,7 @@ int main()
 	sf::Font font;
 	sf::Event event;
 
-	if (!font.loadFromFile("Roboto-Regular.ttf"))
+	if (!font.loadFromFile("OpenSans-Regular.ttf"))
 	{
 		return 1;
 	}
@@ -41,7 +41,7 @@ int main()
 	bool b = true;
 	int calculationCounter = 0;
 	int totalCalculations = 1;
-	for(int i = 1; i < townCount; ++i)
+	for (int i = 1; i < townCount; ++i)
 		totalCalculations *= i;
 
 	while (window.isOpen())
@@ -54,7 +54,7 @@ int main()
 		if (clock.getElapsedTime().asSeconds() > 1.0f / calculationsPerSecond)
 		{
 			clock.restart();
-			if(b)
+			if (b)
 			{
 				b = !route.nextLexicOrder();
 				calculationCounter++;
@@ -72,7 +72,7 @@ int main()
 		}
 
 		window.clear(sf::Color::White);
-		if(b)
+		if (b)
 			route.drawRoads(window);
 		else
 			bestRoute.drawRoads(window);

@@ -39,14 +39,14 @@ void Route::reverse(int from)
 
 bool Route::nextLexicOrder()
 {
-	printOrder(order, townCount);
+	//printOrder(order, townCount);
 	int X = -1;
 	for (int i = 1; i < townCount - 1; ++i)
 	{
 		if (order[i] < order[i + 1])
 			X = i;
 	}
-	if(X == -1)
+	if (X == -1)
 		return true;
 	int Y = -1;
 	for (int i = 1; i < townCount; ++i)
@@ -55,7 +55,7 @@ bool Route::nextLexicOrder()
 			Y = i;
 	}
 	swap(X, Y);
-	reverse(X+1);
+	reverse(X + 1);
 	return false;
 }
 
